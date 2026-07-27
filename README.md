@@ -1,16 +1,33 @@
-# React + Vite
+# RootWatch — Web Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React web dashboard for the RootWatch smart soil, irrigation, and plant
+health monitoring system.
 
-Currently, two official plugins are available:
+## Role in the system
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Displays live and historical sensor data, forecast/risk status, plant
+health assessments, and advisory text, and lets a user manually trigger
+irrigation. Talks only to **RootWatch-BackEnd**'s REST API — no direct
+connection to the ESP32 or any ML/AI service. The Flutter mobile app
+(**RootWatch-Mobile**) consumes the same backend API and mirrors this
+dashboard's core screens.
 
-## React Compiler
+## Status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Early scaffold (default Vite + React template). Dashboard features start
+in a later build step once the backend has real endpoints to poll.
 
-## Expanding the Oxlint configuration
+## Running locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
+
+Dev server runs at `http://localhost:5173` by default.
+
+## Tech stack
+
+- React + Vite
+- Polls RootWatch-BackEnd REST API for sensor readings, forecasts, and
+  advisory data
