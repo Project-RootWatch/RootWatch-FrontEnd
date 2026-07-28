@@ -1,0 +1,95 @@
+.trend-chart {
+  position: relative;
+  background: var(--surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+}
+
+.trend-chart__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.trend-chart__empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.trend-chart__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.trend-chart__gridline {
+  stroke: var(--gridline);
+  stroke-width: 1;
+}
+
+.trend-chart__baseline {
+  stroke: var(--baseline);
+  stroke-width: 1;
+}
+
+.trend-chart__axis-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+
+.trend-chart__line {
+  stroke: var(--chart-series-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.trend-chart__end-dot {
+  fill: var(--chart-series-1);
+  stroke: var(--surface-1);
+  stroke-width: 2;
+}
+
+.trend-chart__end-label {
+  fill: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.trend-chart__crosshair {
+  stroke: var(--baseline);
+  stroke-width: 1;
+}
+
+.trend-chart__hover-dot {
+  fill: var(--chart-series-1);
+  stroke: var(--surface-1);
+  stroke-width: 2;
+}
+
+.trend-chart__tooltip {
+  position: absolute;
+  top: 12px;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.trend-chart__tooltip-value {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trend-chart__tooltip-time {
+  font-size: 11px;
+  opacity: 0.8;
+}

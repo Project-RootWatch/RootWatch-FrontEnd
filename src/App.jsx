@@ -1,122 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import { getCurrentReading, getReadingHistory } from "./api/client";
+import StatTile from "./components/StatTile";
+import MoistureTrendChart from "./components/MoistureTrendChart";
+import "./App.css";
+
+const CURRENT_POLL_MS = 10000;
+const HISTORY_POLL_MS = 30000;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [current, setCurrent] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function loadCurrent() {
+      getCurrentReading()
+        .then((data) => {
+          if (!cancelled) {
+            setCurrent(data);
+            setError(null);
+          }
+        })
+        .catch((err) => !cancelled && setError(err.message));
+    }
+
+    loadCurrent();
+    const interval = setInterval(loadCurrent, CURRENT_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function loadHistory() {
+      getReadingHistory(100)
+        .then((data) => !cancelled && setHistory(data))
+        .catch(() => {});
+    }
+
+    loadHistory();
+    const interval = setInterval(loadHistory, HISTORY_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+    <div className="dashboard">
+      <header className="dashboard__header">
+        <h1 className="dashboard__title">RootWatch</h1>
+        <p className="dashboard__subtitle">Live soil, climate, and plant monitoring</p>
+      </header>
+
+      {error && <div className="dashboard__error">Couldn't reach the backend: {error}</div>}
+
+      <section className="dashboard__stats">
+        <StatTile label="Soil moisture" value={current ? current.soil_moisture : "—"} unit="%" />
+        <StatTile label="Temperature" value={current ? current.temperature : "—"} unit="°C" />
+        <StatTile label="Light level" value={current ? current.light_level : "—"} unit="%" />
       </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
+      <section className="dashboard__chart">
+        <MoistureTrendChart data={history} />
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;

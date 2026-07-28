@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light;
+
+  /* Brand chrome — nav, buttons, headings. Inspired by the Smart Agro
+     reference, but never used on chart data (see --chart-* / --status-*). */
+  --brand-primary: #2f5233;
+  --brand-primary-hover: #24401f;
+  --brand-primary-soft: #eaf1e7;
+  --brand-accent: #d9a441;
+  --brand-accent-soft: #faf1de;
+
+  /* Page chrome, reused from the dataviz skill's validated chart surfaces
+     so cards and charts share one visual surface. */
+  --page-plane: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border-hairline: rgba(11, 11, 11, 0.1);
+
+  /* Chart series — validated categorical slot 1 (blue). Do not repurpose
+     for UI chrome; do not recolor without re-running the palette validator. */
+  --chart-series-1: #2a78d6;
+
+  /* Status palette — fixed, never themed. Always paired with an icon + label. */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-card: 16px;
+  --radius-control: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--page-plane);
+  color: var(--text-primary);
+}
