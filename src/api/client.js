@@ -23,3 +23,11 @@ export function getReadingHistory(limit = 100) {
 export function postAdvisory() {
   return request("/api/advisory", { method: "POST" });
 }
+
+export function postPlantHealth(file) {
+  const formData = new FormData();
+  formData.append("photo", file);
+  // No Content-Type header here on purpose — the browser sets the
+  // multipart boundary itself; setting it manually breaks the upload.
+  return request("/api/plant-health", { method: "POST", body: formData });
+}

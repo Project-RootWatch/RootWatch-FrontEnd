@@ -1,0 +1,106 @@
+.plant-health-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+}
+
+.plant-health-panel__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.plant-health-panel__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 560px) {
+  .plant-health-panel__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plant-health-panel__upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plant-health-panel__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.plant-health-panel__choose-button {
+  display: inline-block;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-primary);
+  background: var(--brand-primary-soft);
+  border-radius: var(--radius-control);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.plant-health-panel__choose-button:hover {
+  background: color-mix(in srgb, var(--brand-primary-soft) 70%, var(--brand-primary) 10%);
+}
+
+.plant-health-panel__preview {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-hairline);
+}
+
+.plant-health-panel__analyze-button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--brand-primary);
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.plant-health-panel__analyze-button:hover:not(:disabled) {
+  background: var(--brand-primary-hover);
+}
+
+.plant-health-panel__analyze-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.plant-health-panel__result {
+  display: flex;
+  align-items: flex-start;
+}
+
+.plant-health-panel__placeholder {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.plant-health-panel__error {
+  color: var(--status-critical);
+  font-size: 14px;
+}
+
+.plant-health-panel__text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+}
