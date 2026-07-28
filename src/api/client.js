@@ -19,3 +19,7 @@ export function getCurrentReading() {
 export function getReadingHistory(limit = 100) {
   return request(`/api/readings/history?limit=${limit}`);
 }
+
+export function postAdvisory() {
+  return request("/api/advisory", { method: "POST" });
+}

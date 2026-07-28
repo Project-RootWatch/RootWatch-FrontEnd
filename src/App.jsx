@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getCurrentReading, getReadingHistory } from "./api/client";
 import StatTile from "./components/StatTile";
 import MoistureTrendChart from "./components/MoistureTrendChart";
+import AdvisoryPanel from "./components/AdvisoryPanel";
 import "./App.css";
 
 const CURRENT_POLL_MS = 10000;
@@ -68,6 +69,10 @@ function App() {
 
       <section className="dashboard__chart">
         <MoistureTrendChart data={history} />
+      </section>
+
+      <section className="dashboard__advisory">
+        <AdvisoryPanel />
       </section>
     </div>
   );
