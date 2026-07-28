@@ -31,3 +31,15 @@ export function postPlantHealth(file) {
   // multipart boundary itself; setting it manually breaks the upload.
   return request("/api/plant-health", { method: "POST", body: formData });
 }
+
+export function postIrrigationTrigger(durationSeconds) {
+  return request("/api/irrigation/trigger", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ duration_seconds: durationSeconds }),
+  });
+}
+
+export function getIrrigationStatus() {
+  return request("/api/irrigation/status");
+}
