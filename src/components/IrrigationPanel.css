@@ -1,0 +1,96 @@
+.irrigation-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+}
+
+.irrigation-panel__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.irrigation-panel__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.irrigation-panel__error {
+  color: var(--status-critical);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.irrigation-panel__controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.irrigation-panel__duration-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.irrigation-panel__duration-input {
+  font-family: inherit;
+  font-size: 14px;
+  width: 90px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  color: var(--text-primary);
+  background: var(--page-plane);
+}
+
+.irrigation-panel__trigger-button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--brand-primary);
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.irrigation-panel__trigger-button:hover:not(:disabled) {
+  background: var(--brand-primary-hover);
+}
+
+.irrigation-panel__trigger-button--confirm {
+  background: var(--status-serious);
+}
+
+.irrigation-panel__trigger-button--confirm:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--status-serious) 85%, black);
+}
+
+.irrigation-panel__trigger-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.irrigation-panel__cancel-button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  padding: 10px 16px;
+  cursor: pointer;
+}
