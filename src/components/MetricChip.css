@@ -1,0 +1,32 @@
+.metric-chip {
+  flex: 1;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 12px 8px;
+  background: var(--surface-2);
+}
+
+.metric-chip__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.metric-chip--good .metric-chip__value {
+  color: var(--status-good);
+}
+.metric-chip--warning .metric-chip__value {
+  color: var(--status-warning);
+}
+.metric-chip--serious .metric-chip__value {
+  color: var(--status-serious);
+}
+.metric-chip--critical .metric-chip__value {
+  color: var(--status-critical);
+}
+
+.metric-chip__label {
+  color: var(--text-muted);
+}
