@@ -1,16 +1,18 @@
 .trend-chart {
   position: relative;
-  background: var(--surface-1);
-  border: 1px solid var(--border-hairline);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-card);
-  padding: 20px 22px;
+  padding: 18px 18px 14px;
 }
 
 .trend-chart__title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
 }
 
 .trend-chart__empty {
@@ -28,47 +30,49 @@
 }
 
 .trend-chart__gridline {
-  stroke: var(--gridline);
+  stroke: var(--chart-grid);
   stroke-width: 1;
 }
 
 .trend-chart__baseline {
-  stroke: var(--baseline);
+  stroke: var(--chart-baseline);
   stroke-width: 1;
 }
 
 .trend-chart__axis-label {
   fill: var(--text-muted);
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 10px;
 }
 
 .trend-chart__line {
-  stroke: var(--chart-series-1);
+  stroke: var(--chart-line);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
 .trend-chart__end-dot {
-  fill: var(--chart-series-1);
-  stroke: var(--surface-1);
+  fill: var(--chart-line);
+  stroke: var(--surface);
   stroke-width: 2;
 }
 
 .trend-chart__end-label {
   fill: var(--text-primary);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
 }
 
 .trend-chart__crosshair {
-  stroke: var(--baseline);
+  stroke: var(--border-strong);
   stroke-width: 1;
 }
 
 .trend-chart__hover-dot {
-  fill: var(--chart-series-1);
-  stroke: var(--surface-1);
+  fill: var(--chart-line);
+  stroke: var(--surface);
   stroke-width: 2;
 }
 
@@ -76,8 +80,9 @@
   position: absolute;
   top: 12px;
   transform: translateX(-50%);
-  background: var(--text-primary);
-  color: #ffffff;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
   border-radius: 8px;
   padding: 6px 10px;
   pointer-events: none;
@@ -85,11 +90,14 @@
 }
 
 .trend-chart__tooltip-value {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 700;
+  color: var(--accent);
 }
 
 .trend-chart__tooltip-time {
-  font-size: 11px;
-  opacity: 0.8;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
 }

@@ -1,51 +1,17 @@
-.dashboard {
-  max-width: 960px;
+.app-shell {
+  max-width: 480px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
 }
 
-.dashboard__header {
-  margin-bottom: 28px;
+.app-main {
+  flex: 1;
 }
 
-.dashboard__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--brand-primary);
-  margin: 0 0 4px;
-}
-
-.dashboard__subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.dashboard__error {
-  background: var(--brand-accent-soft);
-  border: 1px solid var(--brand-accent);
-  color: var(--text-primary);
-  border-radius: var(--radius-control);
-  padding: 12px 16px;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-.dashboard__stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.dashboard__chart {
-  margin-bottom: 24px;
-}
-
-.dashboard__advisory {
-  margin-bottom: 24px;
-}
-
-.dashboard__plant-health {
-  margin-bottom: 24px;
+.coming-soon {
+  padding: 60px 20px;
+  text-align: center;
 }

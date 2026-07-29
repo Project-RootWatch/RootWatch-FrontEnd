@@ -1,0 +1,52 @@
+.soil-screen__empty {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.soil-screen__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px 24px;
+  text-align: center;
+}
+
+.soil-screen__hero-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 56px;
+  color: var(--accent);
+  line-height: 1;
+  margin-top: 8px;
+}
+
+.soil-screen__hero-unit {
+  font-size: 24px;
+  margin-left: 2px;
+  color: var(--accent-strong);
+}
+
+.soil-screen__hero-pill {
+  margin-top: 12px;
+}
+
+.soil-screen__stats {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.soil-screen__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px;
+}
+
+.soil-screen__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-good);
+}

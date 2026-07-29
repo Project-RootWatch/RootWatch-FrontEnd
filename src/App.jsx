@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
-import { getCurrentReading, getReadingHistory } from "./api/client";
-import StatTile from "./components/StatTile";
-import MoistureTrendChart from "./components/MoistureTrendChart";
-import AdvisoryPanel from "./components/AdvisoryPanel";
-import PlantHealthPanel from "./components/PlantHealthPanel";
-import IrrigationPanel from "./components/IrrigationPanel";
+import { getCurrentReading } from "./api/client";
+import { getRiskStatus } from "./status";
+import Header from "./components/Header";
+import BottomNav from "./components/BottomNav";
+import SoilScreen from "./screens/SoilScreen";
 import "./App.css";
 
 const CURRENT_POLL_MS = 10000;
-const HISTORY_POLL_MS = 30000;
+
+function ComingSoon({ name }) {
+  return <div className="coming-soon mono-label">{name} — building next</div>;
+}
 
 function App() {
+  const [activeTab, setActiveTab] = useState("soil");
   const [current, setCurrent] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
     function loadCurrent() {
       getCurrentReading()
-        .then((data) => {
-          if (!cancelled) {
-            setCurrent(data);
-            setError(null);
-          }
-        })
-        .catch((err) => !cancelled && setError(err.message));
+        .then((data) => !cancelled && setCurrent(data))
+        .catch(() => {});
     }
 
     loadCurrent();
@@ -37,53 +33,21 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    function loadHistory() {
-      getReadingHistory(100)
-        .then((data) => !cancelled && setHistory(data))
-        .catch(() => {});
-    }
-
-    loadHistory();
-    const interval = setInterval(loadHistory, HISTORY_POLL_MS);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, []);
+  const status = getRiskStatus(current);
 
   return (
-    <div className="dashboard">
-      <header className="dashboard__header">
-        <h1 className="dashboard__title">RootWatch</h1>
-        <p className="dashboard__subtitle">Live soil, climate, and plant monitoring</p>
-      </header>
+    <div className="app-shell">
+      <Header status={status} />
 
-      {error && <div className="dashboard__error">Couldn't reach the backend: {error}</div>}
+      <main className="app-main">
+        {activeTab === "soil" && <SoilScreen current={current} status={status} />}
+        {activeTab === "chart" && <ComingSoon name="Chart" />}
+        {activeTab === "plant" && <ComingSoon name="Plant" />}
+        {activeTab === "water" && <ComingSoon name="Water" />}
+        {activeTab === "log" && <ComingSoon name="Log" />}
+      </main>
 
-      <section className="dashboard__stats">
-        <StatTile label="Soil moisture" value={current ? current.soil_moisture : "—"} unit="%" />
-        <StatTile label="Temperature" value={current ? current.temperature : "—"} unit="°C" />
-        <StatTile label="Light level" value={current ? current.light_level : "—"} unit="%" />
-      </section>
-
-      <section className="dashboard__chart">
-        <MoistureTrendChart data={history} />
-      </section>
-
-      <section className="dashboard__advisory">
-        <AdvisoryPanel />
-      </section>
-
-      <section className="dashboard__plant-health">
-        <PlantHealthPanel />
-      </section>
-
-      <section className="dashboard__irrigation">
-        <IrrigationPanel />
-      </section>
+      <BottomNav active={activeTab} onChange={setActiveTab} />
     </div>
   );
 }

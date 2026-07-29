@@ -45,7 +45,7 @@ export default function SoilScreen({ current, status }) {
 
       <div className="soil-screen__stats">
         <MiniStat icon={<ThermometerIcon />} value={current.temperature} unit="°C" label="Temp" />
-        <MiniStat icon={<SunIcon />} value={Math.round(current.light_level)} unit="lx" label="Light" />
+        <MiniStat icon={<SunIcon />} value={Math.round(current.light_level)} unit="%" label="Light" />
         <MiniStat icon={<LeafIcon />} swatch={swatch} label={leafColorLabel(current.color)} />
       </div>
 
