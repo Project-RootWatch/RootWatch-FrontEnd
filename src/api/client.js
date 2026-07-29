@@ -32,6 +32,14 @@ export function postPlantHealth(file) {
   return request("/api/plant-health", { method: "POST", body: formData });
 }
 
+export function getPlantHealthHistory(limit = 10) {
+  return request(`/api/plant-health/history?limit=${limit}`);
+}
+
+export function getActivity(limit = 20) {
+  return request(`/api/activity?limit=${limit}`);
+}
+
 export function postIrrigationTrigger(durationSeconds) {
   return request("/api/irrigation/trigger", {
     method: "POST",
