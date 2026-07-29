@@ -1,0 +1,53 @@
+.hold-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hold-trigger__button {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.hold-trigger__button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.hold-trigger__ring {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.hold-trigger__ring-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.hold-trigger__ring-progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.hold-trigger__icon {
+  color: var(--accent);
+  position: relative;
+}
+
+.hold-trigger__label {
+  color: var(--text-muted);
+}

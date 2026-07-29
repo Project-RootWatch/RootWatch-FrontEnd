@@ -6,7 +6,7 @@ export default function Banner({ level, icon, title, subtitle }) {
       <span className="banner__icon">{icon}</span>
       <div>
         <div className="banner__title">{title}</div>
-        {subtitle && <div className="banner__subtitle mono-label">{subtitle}</div>}
+        {subtitle && <div className="banner__subtitle">{subtitle}</div>}
       </div>
     </div>
   );

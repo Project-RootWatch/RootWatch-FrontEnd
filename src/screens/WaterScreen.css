@@ -1,0 +1,110 @@
+.water-screen__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+}
+
+.water-screen__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.water-screen__lang-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.water-screen__lang-toggle button {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.water-screen__lang-toggle button.active {
+  background: var(--surface-2);
+  color: var(--accent);
+}
+
+.water-screen__loading {
+  padding: 0 20px;
+}
+
+.water-screen__error {
+  margin: 12px 20px 0;
+  color: var(--status-critical);
+  font-size: 13px;
+}
+
+.water-screen__refresh {
+  display: block;
+  margin: 12px auto 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.water-screen__section-label {
+  text-align: center;
+  margin: 28px 20px 12px;
+}
+
+.water-screen__card {
+  margin: 0 20px 12px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.water-screen__card-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  color: var(--accent);
+}
+
+.water-screen__card-row > div:first-child {
+  color: var(--text-primary);
+}
+
+.water-screen__valve-state {
+  margin-top: 8px;
+}
+
+.water-screen__valve-meta {
+  margin-top: 8px;
+}
+
+.water-screen__auto-note {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 220px;
+}
+
+.water-screen__manual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 24px 20px 32px;
+  text-align: center;
+}
+
+.water-screen__manual-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
