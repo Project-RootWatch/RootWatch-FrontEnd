@@ -1,0 +1,5 @@
+.moisture-vessel__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--accent);
+}

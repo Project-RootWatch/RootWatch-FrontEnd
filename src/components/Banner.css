@@ -1,0 +1,54 @@
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: var(--radius-card);
+  border: 1px solid;
+  padding: 14px 16px;
+  margin: 16px 20px 0;
+}
+
+.banner__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.banner__subtitle {
+  margin-top: 2px;
+}
+
+.banner--good {
+  color: var(--status-good);
+  background: var(--status-good-soft);
+  border-color: color-mix(in srgb, var(--status-good) 35%, transparent);
+}
+.banner--good .banner__title {
+  color: var(--status-good);
+}
+
+.banner--warning {
+  color: var(--status-warning);
+  background: var(--status-warning-soft);
+  border-color: color-mix(in srgb, var(--status-warning) 40%, transparent);
+}
+.banner--warning .banner__title {
+  color: var(--status-warning);
+}
+
+.banner--serious {
+  color: var(--status-serious);
+  background: var(--status-serious-soft);
+  border-color: color-mix(in srgb, var(--status-serious) 40%, transparent);
+}
+.banner--serious .banner__title {
+  color: var(--status-serious);
+}
+
+.banner--critical {
+  color: var(--status-critical);
+  background: var(--status-critical-soft);
+  border-color: color-mix(in srgb, var(--status-critical) 40%, transparent);
+}
+.banner--critical .banner__title {
+  color: var(--status-critical);
+}
