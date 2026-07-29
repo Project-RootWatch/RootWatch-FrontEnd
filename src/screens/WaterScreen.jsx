@@ -4,7 +4,7 @@ import Banner from "../components/Banner";
 import ToggleSwitch from "../components/ToggleSwitch";
 import HoldToTrigger from "../components/HoldToTrigger";
 import StatusPill from "../components/StatusPill";
-import { WarningIcon, DropletIcon } from "../components/icons";
+import { WarningIcon, CheckCircleIcon, DropletIcon } from "../components/icons";
 import { formatRelativeTime } from "../time";
 import "./WaterScreen.css";
 
@@ -79,7 +79,7 @@ export default function WaterScreen() {
       {advisory && (
         <Banner
           level={advisory.status.level}
-          icon={<WarningIcon />}
+          icon={advisory.status.level === "good" ? <CheckCircleIcon /> : <WarningIcon />}
           title={advisory.status.level === "good" ? advisory.status.label : "Action required"}
           subtitle={
             <span className={lang === "si" ? "sinhala" : ""}>

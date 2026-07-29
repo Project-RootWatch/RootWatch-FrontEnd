@@ -1,0 +1,72 @@
+.log-screen__header {
+  padding: 20px 20px 16px;
+}
+
+.log-screen__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.log-screen__empty {
+  padding: 20px;
+}
+
+.log-screen__list {
+  padding: 0 20px;
+}
+
+.log-item {
+  display: flex;
+  gap: 12px;
+}
+
+.log-item__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.log-item__dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.log-item__dot--accent {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.log-item__dot--good {
+  color: var(--status-good);
+  background: var(--status-good-soft);
+  border-color: color-mix(in srgb, var(--status-good) 40%, transparent);
+}
+
+.log-item__line {
+  flex: 1;
+  width: 1px;
+  min-height: 18px;
+  background: var(--border);
+  margin-top: 4px;
+}
+
+.log-item__content {
+  padding-bottom: 18px;
+}
+
+.log-item__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}

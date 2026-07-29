@@ -4,13 +4,13 @@ import { getRiskStatus } from "./status";
 import Header from "./components/Header";
 import BottomNav from "./components/BottomNav";
 import SoilScreen from "./screens/SoilScreen";
+import ChartScreen from "./screens/ChartScreen";
+import PlantScreen from "./screens/PlantScreen";
+import WaterScreen from "./screens/WaterScreen";
+import LogScreen from "./screens/LogScreen";
 import "./App.css";
 
 const CURRENT_POLL_MS = 10000;
-
-function ComingSoon({ name }) {
-  return <div className="coming-soon mono-label">{name} — building next</div>;
-}
 
 function App() {
   const [activeTab, setActiveTab] = useState("soil");
@@ -41,10 +41,10 @@ function App() {
 
       <main className="app-main">
         {activeTab === "soil" && <SoilScreen current={current} status={status} />}
-        {activeTab === "chart" && <ComingSoon name="Chart" />}
-        {activeTab === "plant" && <ComingSoon name="Plant" />}
-        {activeTab === "water" && <ComingSoon name="Water" />}
-        {activeTab === "log" && <ComingSoon name="Log" />}
+        {activeTab === "chart" && <ChartScreen />}
+        {activeTab === "plant" && <PlantScreen />}
+        {activeTab === "water" && <WaterScreen />}
+        {activeTab === "log" && <LogScreen />}
       </main>
 
       <BottomNav active={activeTab} onChange={setActiveTab} />
