@@ -95,42 +95,46 @@ export default function WaterScreen() {
 
       <div className="water-screen__section-label mono-label">Irrigation control</div>
 
-      <div className="water-screen__card">
-        <div className="water-screen__card-row">
-          <div>
-            <div className="mono-label">Last command</div>
-            {lastCommand ? (
-              <>
-                <div className="water-screen__valve-state">
-                  <StatusPill level={lastCommand.picked_up ? "good" : "warning"} label={lastCommand.picked_up ? "Sent to device" : "Waiting for device"} />
-                </div>
-                <div className="mono-label water-screen__valve-meta">
-                  {formatRelativeTime(lastCommand.requested_at)} · {lastCommand.duration_seconds}s
-                </div>
-              </>
-            ) : (
-              <div className="water-screen__valve-state mono-label">No commands sent yet</div>
-            )}
+      <div className="water-screen__controls-grid">
+        <div className="water-screen__controls-col">
+          <div className="water-screen__card">
+            <div className="water-screen__card-row">
+              <div>
+                <div className="mono-label">Last command</div>
+                {lastCommand ? (
+                  <>
+                    <div className="water-screen__valve-state">
+                      <StatusPill level={lastCommand.picked_up ? "good" : "warning"} label={lastCommand.picked_up ? "Sent to device" : "Waiting for device"} />
+                    </div>
+                    <div className="mono-label water-screen__valve-meta">
+                      {formatRelativeTime(lastCommand.requested_at)} · {lastCommand.duration_seconds}s
+                    </div>
+                  </>
+                ) : (
+                  <div className="water-screen__valve-state mono-label">No commands sent yet</div>
+                )}
+              </div>
+              <DropletIcon />
+            </div>
           </div>
-          <DropletIcon />
-        </div>
-      </div>
 
-      <div className="water-screen__card">
-        <div className="water-screen__card-row">
-          <div>
-            <div className="mono-label">Auto mode (LSTM)</div>
-            <div className="water-screen__auto-note">Available once the LSTM model is integrated</div>
+          <div className="water-screen__card">
+            <div className="water-screen__card-row">
+              <div>
+                <div className="mono-label">Auto mode (LSTM)</div>
+                <div className="water-screen__auto-note">Available once the LSTM model is integrated</div>
+              </div>
+              <ToggleSwitch checked={false} disabled />
+            </div>
           </div>
-          <ToggleSwitch checked={false} disabled />
         </div>
-      </div>
 
-      <div className="water-screen__manual">
-        <div className="mono-label">Manual override</div>
-        <div className="water-screen__manual-hint">Hold 3 seconds to trigger irrigation ({HOLD_TRIGGER_DURATION}s)</div>
-        <HoldToTrigger onComplete={handleHoldComplete} />
-        {triggerError && <div className="water-screen__error">{triggerError}</div>}
+        <div className="water-screen__manual">
+          <div className="mono-label">Manual override</div>
+          <div className="water-screen__manual-hint">Hold 3 seconds to trigger irrigation ({HOLD_TRIGGER_DURATION}s)</div>
+          <HoldToTrigger onComplete={handleHoldComplete} />
+          {triggerError && <div className="water-screen__error">{triggerError}</div>}
+        </div>
       </div>
     </div>
   );
