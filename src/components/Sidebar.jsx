@@ -1,5 +1,5 @@
 import { SoilIcon, ChartIcon, LeafIcon, DropletIcon, ClockIcon } from "./icons";
-import "./BottomNav.css";
+import "./Sidebar.css";
 
 const TABS = [
   { id: "soil", label: "Soil", Icon: SoilIcon },
@@ -9,13 +9,13 @@ const TABS = [
   { id: "log", label: "Log", Icon: ClockIcon },
 ];
 
-export default function BottomNav({ active, onChange }) {
+export default function Sidebar({ active, onChange }) {
   return (
-    <nav className="bottom-nav">
+    <nav className="sidebar">
       {TABS.map(({ id, label, Icon }) => (
         <button
           key={id}
-          className={`bottom-nav__item ${active === id ? "bottom-nav__item--active" : ""}`}
+          className={`sidebar__item ${active === id ? "sidebar__item--active" : ""}`}
           onClick={() => onChange(id)}
         >
           <Icon />

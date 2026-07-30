@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getCurrentReading } from "./api/client";
 import { getRiskStatus } from "./status";
 import Header from "./components/Header";
-import BottomNav from "./components/BottomNav";
+import Sidebar from "./components/Sidebar";
 import SoilScreen from "./screens/SoilScreen";
 import ChartScreen from "./screens/ChartScreen";
 import PlantScreen from "./screens/PlantScreen";
@@ -39,15 +39,17 @@ function App() {
     <div className="app-shell">
       <Header status={status} />
 
-      <main className="app-main">
-        {activeTab === "soil" && <SoilScreen current={current} status={status} />}
-        {activeTab === "chart" && <ChartScreen />}
-        {activeTab === "plant" && <PlantScreen />}
-        {activeTab === "water" && <WaterScreen />}
-        {activeTab === "log" && <LogScreen />}
-      </main>
+      <div className="app-body">
+        <Sidebar active={activeTab} onChange={setActiveTab} />
 
-      <BottomNav active={activeTab} onChange={setActiveTab} />
+        <main className="app-main">
+          {activeTab === "soil" && <SoilScreen current={current} status={status} />}
+          {activeTab === "chart" && <ChartScreen />}
+          {activeTab === "plant" && <PlantScreen />}
+          {activeTab === "water" && <WaterScreen />}
+          {activeTab === "log" && <LogScreen />}
+        </main>
+      </div>
     </div>
   );
 }

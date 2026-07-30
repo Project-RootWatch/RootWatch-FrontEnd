@@ -31,22 +31,24 @@ export default function SoilScreen({ current, status }) {
         />
       )}
 
-      <div className="soil-screen__hero">
-        <MoistureVessel value={current.soil_moisture} />
-        <div className="soil-screen__hero-value">
-          {Math.round(current.soil_moisture)}
-          <span className="soil-screen__hero-unit">%</span>
+      <div className="soil-screen__grid">
+        <div className="soil-screen__hero">
+          <MoistureVessel value={current.soil_moisture} />
+          <div className="soil-screen__hero-value">
+            {Math.round(current.soil_moisture)}
+            <span className="soil-screen__hero-unit">%</span>
+          </div>
+          <div className="mono-label">Soil moisture</div>
+          <div className="soil-screen__hero-pill">
+            <StatusPill level={status.level} label={status.level === "good" ? "Normal" : "Caution"} />
+          </div>
         </div>
-        <div className="mono-label">Soil moisture</div>
-        <div className="soil-screen__hero-pill">
-          <StatusPill level={status.level} label={status.level === "good" ? "Normal" : "Caution"} />
-        </div>
-      </div>
 
-      <div className="soil-screen__stats">
-        <MiniStat icon={<ThermometerIcon />} value={current.temperature} unit="°C" label="Temp" />
-        <MiniStat icon={<SunIcon />} value={Math.round(current.light_level)} unit="%" label="Light" />
-        <MiniStat icon={<LeafIcon />} swatch={swatch} label={leafColorLabel(current.color)} />
+        <div className="soil-screen__stats">
+          <MiniStat icon={<ThermometerIcon />} value={current.temperature} unit="°C" label="Temp" />
+          <MiniStat icon={<SunIcon />} value={Math.round(current.light_level)} unit="%" label="Light" />
+          <MiniStat icon={<LeafIcon />} swatch={swatch} label={leafColorLabel(current.color)} />
+        </div>
       </div>
 
       <div className="soil-screen__footer mono-label">
