@@ -55,52 +55,58 @@ export default function PlantScreen() {
         <div className="mono-label">Gemini Vision analysis</div>
       </div>
 
-      <div className="plant-screen__photo-card">
-        {scan && (
-          <div className="plant-screen__photo-pill">
-            <StatusPill level={overallScanLevel(scan)} label={capitalize(overallScanLevel(scan))} />
-          </div>
-        )}
+      <div className="plant-screen__grid">
+        <div className="plant-screen__photo-card">
+          {scan && (
+            <div className="plant-screen__photo-pill">
+              <StatusPill level={overallScanLevel(scan)} label={capitalize(overallScanLevel(scan))} />
+            </div>
+          )}
 
-        {previewUrl ? (
-          <img src={previewUrl} alt="Selected leaf" className="plant-screen__photo" />
-        ) : (
-          <label className="plant-screen__upload-placeholder">
-            <CameraIcon />
-            <span className="mono-label">Tap to upload a leaf photo</span>
+          {previewUrl ? (
+            <img src={previewUrl} alt="Selected leaf" className="plant-screen__photo" />
+          ) : (
+            <label className="plant-screen__upload-placeholder">
+              <CameraIcon />
+              <span className="mono-label">Click to upload a leaf photo</span>
+            </label>
+          )}
+
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            capture="environment"
+            onChange={handleFileChange}
+            id="plant-photo-input"
+            className="plant-screen__file-input"
+          />
+          <label htmlFor="plant-photo-input" className="plant-screen__choose-button">
+            {loading ? "Analyzing..." : file ? "Choose a different photo" : "Choose photo"}
           </label>
-        )}
-
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          capture="environment"
-          onChange={handleFileChange}
-          id="plant-photo-input"
-          className="plant-screen__file-input"
-        />
-        <label htmlFor="plant-photo-input" className="plant-screen__choose-button">
-          {loading ? "Analyzing..." : file ? "Choose a different photo" : "Choose photo"}
-        </label>
-      </div>
-
-      {error && <div className="plant-screen__error">{error}</div>}
-
-      {scan && (
-        <div className="plant-screen__result">
-          <div className="plant-screen__result-headline">
-            <CheckCircleIcon />
-            <span className="sinhala">{scan.headline}</span>
-          </div>
-          <p className="plant-screen__result-description sinhala">{scan.description}</p>
-
-          <div className="plant-screen__chips">
-            <MetricChip level={diseaseLevel(scan.disease)} value={capitalize(scan.disease)} label="Disease" />
-            <MetricChip level={stressLevel(scan.stress)} value={capitalize(scan.stress)} label="Stress" />
-            <MetricChip level={growthLevel(scan.growth)} value={capitalize(scan.growth)} label="Growth" />
-          </div>
         </div>
-      )}
+
+        <div className="plant-screen__result-pane">
+          {error && <div className="plant-screen__error">{error}</div>}
+
+          {scan ? (
+            <div className="plant-screen__result">
+              <div className="plant-screen__result-headline">
+                <CheckCircleIcon />
+                <span className="sinhala">{scan.headline}</span>
+              </div>
+              <p className="plant-screen__result-description sinhala">{scan.description}</p>
+
+              <div className="plant-screen__chips">
+                <MetricChip level={diseaseLevel(scan.disease)} value={capitalize(scan.disease)} label="Disease" />
+                <MetricChip level={stressLevel(scan.stress)} value={capitalize(scan.stress)} label="Stress" />
+                <MetricChip level={growthLevel(scan.growth)} value={capitalize(scan.growth)} label="Growth" />
+              </div>
+            </div>
+          ) : (
+            !error && <div className="mono-label plant-screen__result-placeholder">Analysis will appear here</div>
+          )}
+        </div>
+      </div>
 
       {history.length > 0 && (
         <div className="plant-screen__history">
