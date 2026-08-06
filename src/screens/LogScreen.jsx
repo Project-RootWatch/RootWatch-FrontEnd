@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { getActivity } from "../api/client";
 import { ChartIcon, DropletIcon, LeafIcon } from "../components/icons";
 import { formatRelativeTime } from "../time";
@@ -16,6 +17,15 @@ const COLORS = {
   plant_scan: "good",
 };
 
+const container = {
+  animate: { transition: { staggerChildren: 0.04 } },
+};
+
+const item = {
+  initial: { opacity: 0, x: -8 },
+  animate: { opacity: 1, x: 0 },
+};
+
 export default function LogScreen() {
   const [events, setEvents] = useState([]);
 
@@ -27,33 +37,38 @@ export default function LogScreen() {
 
   return (
     <div className="log-screen">
-      <div className="log-screen__header">
+      <motion.div className="log-screen__header" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="log-screen__title">Activity Log</div>
         <div className="mono-label">Readings, irrigations, scans</div>
-      </div>
+      </motion.div>
 
       {events.length === 0 && <div className="mono-label log-screen__empty">No activity yet</div>}
 
-      <div className="log-screen__list">
+      <motion.div className="log-screen__list" variants={container} initial="initial" animate="animate">
         {events.map((event, i) => {
           const Icon = ICONS[event.type] ?? ChartIcon;
           const color = COLORS[event.type] ?? "accent";
           return (
-            <div className="log-item" key={`${event.type}-${event.timestamp}-${i}`}>
+            <motion.div className="log-item" key={`${event.type}-${event.timestamp}-${i}`} variants={item}>
               <div className="log-item__rail">
-                <div className={`log-item__dot log-item__dot--${color}`}>
+                <motion.div
+                  className={`log-item__dot log-item__dot--${color}`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: i * 0.04 + 0.1, type: "spring", stiffness: 400, damping: 20 }}
+                >
                   <Icon width="14" height="14" />
-                </div>
+                </motion.div>
                 {i < events.length - 1 && <div className="log-item__line" />}
               </div>
               <div className="log-item__content">
                 <div className="log-item__label">{event.label}</div>
                 <div className="mono-label">{formatRelativeTime(event.timestamp)}</div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { postAdvisory, postIrrigationTrigger, getIrrigationStatus } from "../api/client";
 import Banner from "../components/Banner";
 import ToggleSwitch from "../components/ToggleSwitch";
 import HoldToTrigger from "../components/HoldToTrigger";
 import StatusPill from "../components/StatusPill";
+import Skeleton from "../components/Skeleton";
 import { WarningIcon, CheckCircleIcon, DropletIcon } from "../components/icons";
 import { formatRelativeTime } from "../time";
 import "./WaterScreen.css";
@@ -57,47 +59,61 @@ export default function WaterScreen() {
   }
 
   return (
-    <div className="water-screen">
+    <motion.div className="water-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
       <div className="water-screen__header">
         <div>
           <div className="water-screen__title">Advisory</div>
           <div className="mono-label">Gemini AI · Sinhala / English</div>
         </div>
         <div className="water-screen__lang-toggle">
-          <button className={lang === "si" ? "active" : ""} onClick={() => setLang("si")}>
+          <motion.button whileTap={{ scale: 0.92 }} className={lang === "si" ? "active" : ""} onClick={() => setLang("si")}>
             සිංහල
-          </button>
-          <button className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>
+          </motion.button>
+          <motion.button whileTap={{ scale: 0.92 }} className={lang === "en" ? "active" : ""} onClick={() => setLang("en")}>
             EN
-          </button>
+          </motion.button>
         </div>
       </div>
 
-      {advisoryLoading && <div className="mono-label water-screen__loading">Loading advisory...</div>}
+      {advisoryLoading && (
+        <div className="water-screen__skeleton">
+          <Skeleton height={62} radius="var(--radius-card)" />
+        </div>
+      )}
       {advisoryError && <div className="water-screen__error">{advisoryError}</div>}
 
-      {advisory && (
-        <Banner
-          level={advisory.status.level}
-          icon={advisory.status.level === "good" ? <CheckCircleIcon /> : <WarningIcon />}
-          title={advisory.status.level === "good" ? advisory.status.label : "Action required"}
-          subtitle={
-            <span className={lang === "si" ? "sinhala" : ""}>
-              {lang === "si" ? advisory.advisory.sinhala : advisory.advisory.english}
-            </span>
-          }
-        />
-      )}
+      <AnimatePresence>
+        {advisory && (
+          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+            <Banner
+              level={advisory.status.level}
+              icon={advisory.status.level === "good" ? <CheckCircleIcon /> : <WarningIcon />}
+              title={advisory.status.level === "good" ? advisory.status.label : "Action required"}
+              subtitle={
+                <span className={lang === "si" ? "sinhala" : ""}>
+                  {lang === "si" ? advisory.advisory.sinhala : advisory.advisory.english}
+                </span>
+              }
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <button className="water-screen__refresh mono-label" onClick={loadAdvisory} disabled={advisoryLoading}>
+      <motion.button
+        whileHover={{ opacity: 0.8 }}
+        whileTap={{ scale: 0.96 }}
+        className="water-screen__refresh mono-label"
+        onClick={loadAdvisory}
+        disabled={advisoryLoading}
+      >
         Refresh advisory
-      </button>
+      </motion.button>
 
       <div className="water-screen__section-label mono-label">Irrigation control</div>
 
       <div className="water-screen__controls-grid">
         <div className="water-screen__controls-col">
-          <div className="water-screen__card">
+          <motion.div className="water-screen__card" whileHover={{ y: -2, borderColor: "var(--border-strong)" }} transition={{ duration: 0.15 }}>
             <div className="water-screen__card-row">
               <div>
                 <div className="mono-label">Last command</div>
@@ -116,9 +132,9 @@ export default function WaterScreen() {
               </div>
               <DropletIcon />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="water-screen__card">
+          <motion.div className="water-screen__card" whileHover={{ y: -2, borderColor: "var(--border-strong)" }} transition={{ duration: 0.15 }}>
             <div className="water-screen__card-row">
               <div>
                 <div className="mono-label">Auto mode (LSTM)</div>
@@ -126,7 +142,7 @@ export default function WaterScreen() {
               </div>
               <ToggleSwitch checked={false} disabled />
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="water-screen__manual">
@@ -136,6 +152,6 @@ export default function WaterScreen() {
           {triggerError && <div className="water-screen__error">{triggerError}</div>}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

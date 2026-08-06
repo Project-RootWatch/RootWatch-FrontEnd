@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
 import "./MoistureTrendChart.css";
 
 const WIDTH = 640;
@@ -65,7 +66,12 @@ export default function MoistureTrendChart({ data }) {
   const last = points[points.length - 1];
 
   return (
-    <div className="trend-chart">
+    <motion.div
+      className="trend-chart"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="trend-chart__title">Soil moisture — last {data.length} readings</div>
 
       {points.length === 0 ? (
@@ -99,12 +105,45 @@ export default function MoistureTrendChart({ data }) {
             {formatTime(points[points.length - 1].reading.timestamp)}
           </text>
 
-          <path d={linePath} className="trend-chart__line" fill="none" />
+          <motion.path
+            d={linePath}
+            className="trend-chart__line"
+            fill="none"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.9, ease: "easeInOut" }}
+          />
 
-          <circle cx={last.x} cy={last.y} r="5" className="trend-chart__end-dot" />
-          <text x={last.x - 10} y={last.y - 12} className="trend-chart__end-label" textAnchor="end">
+          <motion.circle
+            cx={last.x}
+            cy={last.y}
+            r="5"
+            className="trend-chart__end-dot"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9, duration: 0.3 }}
+          />
+          <motion.circle
+            cx={last.x}
+            cy={last.y}
+            r="5"
+            className="trend-chart__end-dot"
+            style={{ fill: "none" }}
+            initial={{ opacity: 0.6, scale: 1 }}
+            animate={{ opacity: 0, scale: 2.2 }}
+            transition={{ delay: 0.9, duration: 1.6, repeat: Infinity, ease: "easeOut" }}
+          />
+          <motion.text
+            x={last.x - 10}
+            y={last.y - 12}
+            className="trend-chart__end-label"
+            textAnchor="end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.3 }}
+          >
             {last.reading.soil_moisture}%
-          </text>
+          </motion.text>
 
           {hovered && (
             <g>
@@ -130,6 +169,6 @@ export default function MoistureTrendChart({ data }) {
           <div className="trend-chart__tooltip-time">{formatTime(hovered.reading.timestamp)}</div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

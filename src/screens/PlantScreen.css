@@ -88,6 +88,13 @@
   color: var(--text-muted);
 }
 
+.plant-screen__skeleton-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
 .plant-screen__error {
   color: var(--status-critical);
   font-size: 14px;
