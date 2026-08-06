@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { getCurrentReading } from "./api/client";
 import { getRiskStatus } from "./status";
 import Header from "./components/Header";
@@ -11,6 +12,20 @@ import LogScreen from "./screens/LogScreen";
 import "./App.css";
 
 const CURRENT_POLL_MS = 10000;
+
+const SCREENS = {
+  soil: SoilScreen,
+  chart: ChartScreen,
+  plant: PlantScreen,
+  water: WaterScreen,
+  log: LogScreen,
+};
+
+const screenVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -6 },
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState("soil");
@@ -34,6 +49,7 @@ function App() {
   }, []);
 
   const status = getRiskStatus(current);
+  const ActiveScreen = SCREENS[activeTab];
 
   return (
     <div className="app-shell">
@@ -43,11 +59,18 @@ function App() {
         <Sidebar active={activeTab} onChange={setActiveTab} />
 
         <main className="app-main">
-          {activeTab === "soil" && <SoilScreen current={current} status={status} />}
-          {activeTab === "chart" && <ChartScreen />}
-          {activeTab === "plant" && <PlantScreen />}
-          {activeTab === "water" && <WaterScreen />}
-          {activeTab === "log" && <LogScreen />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={screenVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
+              {activeTab === "soil" ? <ActiveScreen current={current} status={status} /> : <ActiveScreen />}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>

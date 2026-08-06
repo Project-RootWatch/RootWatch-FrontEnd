@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { SoilIcon, ChartIcon, LeafIcon, DropletIcon, ClockIcon } from "./icons";
 import "./Sidebar.css";
 
@@ -13,14 +14,25 @@ export default function Sidebar({ active, onChange }) {
   return (
     <nav className="sidebar">
       {TABS.map(({ id, label, Icon }) => (
-        <button
+        <motion.button
           key={id}
           className={`sidebar__item ${active === id ? "sidebar__item--active" : ""}`}
           onClick={() => onChange(id)}
+          whileHover={{ x: 2 }}
+          whileTap={{ scale: 0.94 }}
         >
-          <Icon />
-          <span className="mono-label">{label}</span>
-        </button>
+          {active === id && (
+            <motion.div
+              layoutId="sidebar-active"
+              className="sidebar__active-bg"
+              transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            />
+          )}
+          <span className="sidebar__item-content">
+            <Icon />
+            <span className="mono-label">{label}</span>
+          </span>
+        </motion.button>
       ))}
     </nav>
   );
