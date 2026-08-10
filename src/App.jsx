@@ -83,6 +83,9 @@ function Dashboard({ user, onLogout }) {
 function App() {
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [resetToken, setResetToken] = useState(() =>
+    window.location.pathname === "/reset-password" ? new URLSearchParams(window.location.search).get("token") : null
+  );
 
   useEffect(() => {
     if (!getToken()) {
@@ -106,6 +109,18 @@ function App() {
   function handleLogout() {
     clearToken();
     setUser(null);
+  }
+
+  if (resetToken) {
+    return (
+      <ResetPasswordScreen
+        token={resetToken}
+        onDone={() => {
+          window.history.replaceState({}, "", "/");
+          setResetToken(null);
+        }}
+      />
+    );
   }
 
   if (checkingSession) {
