@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { getCurrentReading } from "./api/client";
+import { getCurrentReading, getCurrentUser } from "./api/client";
 import { getRiskStatus } from "./status";
+import { getToken, clearToken, UNAUTHORIZED_EVENT } from "./auth";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import AuthScreen from "./screens/AuthScreen";
 import SoilScreen from "./screens/SoilScreen";
 import ChartScreen from "./screens/ChartScreen";
 import PlantScreen from "./screens/PlantScreen";
@@ -27,7 +29,7 @@ const screenVariants = {
   exit: { opacity: 0, y: -6 },
 };
 
-function App() {
+function Dashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState("soil");
   const [current, setCurrent] = useState(null);
 
@@ -53,7 +55,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Header status={status} />
+      <Header status={status} user={user} onLogout={onLogout} />
 
       <div className="app-body">
         <Sidebar active={activeTab} onChange={setActiveTab} />
@@ -75,6 +77,45 @@ function App() {
       </div>
     </div>
   );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  useEffect(() => {
+    if (!getToken()) {
+      setCheckingSession(false);
+      return;
+    }
+    getCurrentUser()
+      .then(setUser)
+      .catch(() => {}) // 401 handling already clears the token via the client
+      .finally(() => setCheckingSession(false));
+  }, []);
+
+  useEffect(() => {
+    function handleUnauthorized() {
+      setUser(null);
+    }
+    window.addEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
+  }, []);
+
+  function handleLogout() {
+    clearToken();
+    setUser(null);
+  }
+
+  if (checkingSession) {
+    return <div className="app-shell" />;
+  }
+
+  if (!user) {
+    return <AuthScreen onAuthenticated={setUser} />;
+  }
+
+  return <Dashboard user={user} onLogout={handleLogout} />;
 }
 
 export default App;
