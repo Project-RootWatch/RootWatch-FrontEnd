@@ -6,6 +6,7 @@ import { getToken, clearToken, UNAUTHORIZED_EVENT } from "./auth";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import AuthScreen from "./screens/AuthScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import SoilScreen from "./screens/SoilScreen";
 import ChartScreen from "./screens/ChartScreen";
 import PlantScreen from "./screens/PlantScreen";

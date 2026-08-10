@@ -45,6 +45,22 @@ export function getCurrentUser() {
   return request("/api/auth/me");
 }
 
+export function forgotPassword(email) {
+  return request("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(token, password) {
+  return request("/api/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password }),
+  });
+}
+
 export function getCurrentReading() {
   return request("/api/readings/current");
 }
