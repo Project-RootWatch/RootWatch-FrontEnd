@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { getReadingHistory } from "../api/client";
+import { getReadingHistory, getForecast } from "../api/client";
 import MoistureTrendChart from "../components/MoistureTrendChart";
 import MiniStat from "../components/MiniStat";
 import { ChartIcon } from "../components/icons";
 import "./ChartScreen.css";
 
 const HISTORY_POLL_MS = 30000;
+const FORECAST_POLL_MS = 60000;
 
 const statsContainer = {
   animate: { transition: { staggerChildren: 0.06 } },
@@ -19,6 +20,8 @@ const statItem = {
 
 export default function ChartScreen() {
   const [history, setHistory] = useState([]);
+  const [forecast, setForecast] = useState(null);
+  const [forecastError, setForecastError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -31,6 +34,33 @@ export default function ChartScreen() {
 
     loadHistory();
     const interval = setInterval(loadHistory, HISTORY_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    // A missing forecast (not enough history yet) is an expected, normal
+    // state right now — not a real error the user needs to see as one.
+    function loadForecast() {
+      getForecast()
+        .then((data) => {
+          if (cancelled) return;
+          setForecast(data.forecast);
+          setForecastError(null);
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          setForecast(null);
+          setForecastError(err.message);
+        });
+    }
+
+    loadForecast();
+    const interval = setInterval(loadForecast, FORECAST_POLL_MS);
     return () => {
       cancelled = true;
       clearInterval(interval);
@@ -52,7 +82,10 @@ export default function ChartScreen() {
       </motion.div>
 
       <div className="chart-screen__chart">
-        <MoistureTrendChart data={history} />
+        <MoistureTrendChart data={history} forecast={forecast} />
+        {!forecast && forecastError && (
+          <div className="chart-screen__forecast-note mono-label">Forecast unavailable: {forecastError}</div>
+        )}
       </div>
 
       <motion.div className="chart-screen__stats" variants={statsContainer} initial="initial" animate="animate">

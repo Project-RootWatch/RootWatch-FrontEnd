@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { postAdvisory, postIrrigationTrigger, getIrrigationStatus } from "../api/client";
+import { postAdvisory, postIrrigationTrigger, getIrrigationStatus, getForecast } from "../api/client";
 import Banner from "../components/Banner";
 import ToggleSwitch from "../components/ToggleSwitch";
 import HoldToTrigger from "../components/HoldToTrigger";
 import StatusPill from "../components/StatusPill";
 import Skeleton from "../components/Skeleton";
 import { WarningIcon, CheckCircleIcon, DropletIcon } from "../components/icons";
-import { formatRelativeTime } from "../time";
+import { formatRelativeTime, formatClockTime } from "../time";
 import "./WaterScreen.css";
 
 const STATUS_POLL_MS = 10000;
+const FORECAST_POLL_MS = 60000;
 const HOLD_TRIGGER_DURATION = 30;
 
 export default function WaterScreen() {
@@ -20,6 +21,9 @@ export default function WaterScreen() {
   const [advisoryError, setAdvisoryError] = useState(null);
   const [lastCommand, setLastCommand] = useState(null);
   const [triggerError, setTriggerError] = useState(null);
+  const [forecast, setForecast] = useState(null);
+  const [forecastLoading, setForecastLoading] = useState(true);
+  const [forecastError, setForecastError] = useState(null);
 
   function loadAdvisory() {
     setAdvisoryLoading(true);
@@ -45,6 +49,32 @@ export default function WaterScreen() {
 
     loadStatus();
     const interval = setInterval(loadStatus, STATUS_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function loadForecast() {
+      getForecast()
+        .then((data) => {
+          if (cancelled) return;
+          setForecast(data.forecast);
+          setForecastError(null);
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          setForecast(null);
+          setForecastError(err.message);
+        })
+        .finally(() => !cancelled && setForecastLoading(false));
+    }
+
+    loadForecast();
+    const interval = setInterval(loadForecast, FORECAST_POLL_MS);
     return () => {
       cancelled = true;
       clearInterval(interval);
@@ -138,7 +168,16 @@ export default function WaterScreen() {
             <div className="water-screen__card-row">
               <div>
                 <div className="mono-label">Auto mode (LSTM)</div>
-                <div className="water-screen__auto-note">Available once the LSTM model is integrated</div>
+                {forecastLoading && <div className="water-screen__auto-note">Loading forecast...</div>}
+                {!forecastLoading && forecast && (
+                  <div className="water-screen__auto-note">
+                    Predicted {forecast[forecast.length - 1].soil_moisture}% by{" "}
+                    {formatClockTime(forecast[forecast.length - 1].timestamp)} — automatic triggering isn't built yet
+                  </div>
+                )}
+                {!forecastLoading && !forecast && (
+                  <div className="water-screen__auto-note">{forecastError}</div>
+                )}
               </div>
               <ToggleSwitch checked={false} disabled />
             </div>
