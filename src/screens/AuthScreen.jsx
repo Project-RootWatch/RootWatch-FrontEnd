@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { login, signup, forgotPassword } from "../api/client";
-import { setToken } from "../auth";
+import { setTokens } from "../auth";
 import "./AuthScreen.css";
 
 export default function AuthScreen({ onAuthenticated }) {
@@ -28,7 +28,7 @@ export default function AuthScreen({ onAuthenticated }) {
     const action = mode === "login" ? login : signup;
     action(email, password)
       .then((data) => {
-        setToken(data.access_token);
+        setTokens(data.access_token, data.refresh_token);
         onAuthenticated(data.user);
       })
       .catch((err) => setError(err.message))

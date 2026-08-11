@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { getCurrentReading, getCurrentUser } from "./api/client";
 import { getRiskStatus } from "./status";
-import { getToken, clearToken, UNAUTHORIZED_EVENT } from "./auth";
+import { getToken, clearTokens, UNAUTHORIZED_EVENT } from "./auth";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import AuthScreen from "./screens/AuthScreen";
@@ -107,7 +107,7 @@ function App() {
   }, []);
 
   function handleLogout() {
-    clearToken();
+    clearTokens();
     setUser(null);
   }
 
