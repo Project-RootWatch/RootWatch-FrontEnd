@@ -76,6 +76,31 @@
   stroke-width: 2;
 }
 
+.trend-chart__hover-dot--predicted {
+  fill: var(--text-secondary);
+}
+
+.trend-chart__forecast-line {
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+}
+
+.trend-chart__forecast-label {
+  fill: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.trend-chart__tooltip-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
 .trend-chart__tooltip {
   position: absolute;
   top: 12px;
