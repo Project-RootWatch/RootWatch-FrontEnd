@@ -16,39 +16,60 @@ function formatTime(isoString) {
   return new Date(isoString).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-export default function MoistureTrendChart({ data }) {
+export default function MoistureTrendChart({ data, forecast }) {
   const svgRef = useRef(null);
   const [hoverIndex, setHoverIndex] = useState(null);
 
-  const points = useMemo(() => {
-    if (data.length === 0) return [];
+  const hasForecast = Array.isArray(forecast) && forecast.length > 0;
 
-    const times = data.map((d) => new Date(d.timestamp).getTime());
-    const minT = Math.min(...times);
-    const maxT = Math.max(...times);
+  // History and forecast share one time-based x-scale, spanning from the
+  // earliest history point to the last forecast point (or last history
+  // point, if there's no forecast).
+  const { points, forecastPoints } = useMemo(() => {
+    if (data.length === 0) return { points: [], forecastPoints: [] };
+
+    const historyTimes = data.map((d) => new Date(d.timestamp).getTime());
+    const forecastTimes = hasForecast ? forecast.map((d) => new Date(d.timestamp).getTime()) : [];
+    const allTimes = [...historyTimes, ...forecastTimes];
+    const minT = Math.min(...allTimes);
+    const maxT = Math.max(...allTimes);
     const span = maxT - minT || 1;
 
-    return data.map((d, i) => ({
-      x: PLOT_LEFT + ((times[i] - minT) / span) * (PLOT_RIGHT - PLOT_LEFT),
-      y: PLOT_BOTTOM - (d.soil_moisture / 100) * (PLOT_BOTTOM - PLOT_TOP),
-      reading: d,
-    }));
-  }, [data]);
+    const toXY = (t, value) => ({
+      x: PLOT_LEFT + ((t - minT) / span) * (PLOT_RIGHT - PLOT_LEFT),
+      y: PLOT_BOTTOM - (value / 100) * (PLOT_BOTTOM - PLOT_TOP),
+    });
+
+    const points = data.map((d, i) => ({ ...toXY(historyTimes[i], d.soil_moisture), reading: d, predicted: false }));
+    const forecastPoints = hasForecast
+      ? forecast.map((d, i) => ({ ...toXY(forecastTimes[i], d.soil_moisture), reading: d, predicted: true }))
+      : [];
+
+    return { points, forecastPoints };
+  }, [data, forecast, hasForecast]);
 
   const linePath = useMemo(
     () => points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" "),
     [points]
   );
 
+  const forecastPath = useMemo(() => {
+    if (!hasForecast || points.length === 0) return "";
+    const last = points[points.length - 1];
+    return [last, ...forecastPoints].map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+  }, [forecastPoints, hasForecast, points]);
+
+  const allHoverable = useMemo(() => [...points, ...forecastPoints], [points, forecastPoints]);
+
   function handlePointerMove(event) {
-    if (points.length === 0) return;
+    if (allHoverable.length === 0) return;
     const rect = svgRef.current.getBoundingClientRect();
     const scaleX = WIDTH / rect.width;
     const pointerX = (event.clientX - rect.left) * scaleX;
 
     let nearest = 0;
     let nearestDist = Infinity;
-    points.forEach((p, i) => {
+    allHoverable.forEach((p, i) => {
       const dist = Math.abs(p.x - pointerX);
       if (dist < nearestDist) {
         nearestDist = dist;
@@ -62,8 +83,9 @@ export default function MoistureTrendChart({ data }) {
     setHoverIndex(null);
   }
 
-  const hovered = hoverIndex !== null ? points[hoverIndex] : null;
+  const hovered = hoverIndex !== null ? allHoverable[hoverIndex] : null;
   const last = points[points.length - 1];
+  const lastForecast = forecastPoints[forecastPoints.length - 1];
 
   return (
     <motion.div
@@ -72,7 +94,9 @@ export default function MoistureTrendChart({ data }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="trend-chart__title">Soil moisture — last {data.length} readings</div>
+      <div className="trend-chart__title">
+        Soil moisture — last {data.length} readings{hasForecast ? " + 6h forecast" : ""}
+      </div>
 
       {points.length === 0 ? (
         <div className="trend-chart__empty">No readings yet</div>
@@ -102,7 +126,7 @@ export default function MoistureTrendChart({ data }) {
             {formatTime(points[0].reading.timestamp)}
           </text>
           <text x={PLOT_RIGHT} y={HEIGHT - 8} className="trend-chart__axis-label" textAnchor="end">
-            {formatTime(points[points.length - 1].reading.timestamp)}
+            {formatTime((hasForecast ? forecast[forecast.length - 1] : points[points.length - 1].reading).timestamp)}
           </text>
 
           <motion.path
@@ -113,6 +137,31 @@ export default function MoistureTrendChart({ data }) {
             animate={{ pathLength: 1 }}
             transition={{ duration: 0.9, ease: "easeInOut" }}
           />
+
+          {hasForecast && (
+            <motion.path
+              d={forecastPath}
+              className="trend-chart__forecast-line"
+              fill="none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.5 }}
+            />
+          )}
+
+          {hasForecast && lastForecast && (
+            <motion.text
+              x={lastForecast.x}
+              y={lastForecast.y - 12}
+              className="trend-chart__forecast-label"
+              textAnchor="end"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.3 }}
+            >
+              predicted {lastForecast.reading.soil_moisture}%
+            </motion.text>
+          )}
 
           <motion.circle
             cx={last.x}
@@ -133,17 +182,19 @@ export default function MoistureTrendChart({ data }) {
             animate={{ opacity: 0, scale: 2.2 }}
             transition={{ delay: 0.9, duration: 1.6, repeat: Infinity, ease: "easeOut" }}
           />
-          <motion.text
-            x={last.x - 10}
-            y={last.y - 12}
-            className="trend-chart__end-label"
-            textAnchor="end"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.3 }}
-          >
-            {last.reading.soil_moisture}%
-          </motion.text>
+          {!hasForecast && (
+            <motion.text
+              x={last.x - 10}
+              y={last.y - 12}
+              className="trend-chart__end-label"
+              textAnchor="end"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 0.3 }}
+            >
+              {last.reading.soil_moisture}%
+            </motion.text>
+          )}
 
           {hovered && (
             <g>
@@ -154,18 +205,22 @@ export default function MoistureTrendChart({ data }) {
                 y2={PLOT_BOTTOM}
                 className="trend-chart__crosshair"
               />
-              <circle cx={hovered.x} cy={hovered.y} r="5" className="trend-chart__hover-dot" />
+              <circle
+                cx={hovered.x}
+                cy={hovered.y}
+                r="5"
+                className={hovered.predicted ? "trend-chart__hover-dot trend-chart__hover-dot--predicted" : "trend-chart__hover-dot"}
+              />
             </g>
           )}
         </svg>
       )}
 
       {hovered && (
-        <div
-          className="trend-chart__tooltip"
-          style={{ left: `${(hovered.x / WIDTH) * 100}%` }}
-        >
-          <div className="trend-chart__tooltip-value">{hovered.reading.soil_moisture}%</div>
+        <div className="trend-chart__tooltip" style={{ left: `${(hovered.x / WIDTH) * 100}%` }}>
+          <div className="trend-chart__tooltip-value">
+            {hovered.reading.soil_moisture}%{hovered.predicted && <span className="trend-chart__tooltip-tag"> predicted</span>}
+          </div>
           <div className="trend-chart__tooltip-time">{formatTime(hovered.reading.timestamp)}</div>
         </div>
       )}

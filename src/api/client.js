@@ -100,3 +100,7 @@ export function postIrrigationTrigger(durationSeconds) {
 export function getIrrigationStatus() {
   return request("/api/irrigation/status");
 }
+
+export function getForecast() {
+  return request("/api/forecast");
+}
