@@ -97,6 +97,14 @@ export function getCurrentUser() {
   return request("/api/auth/me");
 }
 
+export function logout(refreshToken) {
+  return request("/api/auth/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  });
+}
+
 export function forgotPassword(email) {
   return request("/api/auth/forgot-password", {
     method: "POST",

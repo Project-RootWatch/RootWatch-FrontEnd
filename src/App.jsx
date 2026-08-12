@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { getCurrentReading, getCurrentUser } from "./api/client";
+import { getCurrentReading, getCurrentUser, logout as apiLogout } from "./api/client";
 import { getRiskStatus } from "./status";
-import { getToken, clearTokens, UNAUTHORIZED_EVENT } from "./auth";
+import { getToken, getRefreshToken, clearTokens, UNAUTHORIZED_EVENT } from "./auth";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import AuthScreen from "./screens/AuthScreen";
@@ -107,6 +107,13 @@ function App() {
   }, []);
 
   function handleLogout() {
+    // Tell the server to revoke these tokens so they're dead everywhere,
+    // not just here — but the local session ends immediately regardless
+    // of whether that network call succeeds (e.g. offline, backend down),
+    // since the whole point of logging out is that this device forgets
+    // the tokens right now.
+    const refreshToken = getRefreshToken();
+    apiLogout(refreshToken).catch(() => {});
     clearTokens();
     setUser(null);
   }
